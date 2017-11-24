@@ -3,6 +3,21 @@
 EntropyModel::EntropyModel()
 {
     m_engine = std::unique_ptr<EntropyEngine>(new EntropyEngine());
+    m_frameClock = std::unique_ptr<QTimer>(new QTimer(this));
+//    QObject::connect(m_frameClock.get(), SIGNAL(timeout()), dynamic_cast<EntropyModel*>(this), SLOT(updateData()));
+    auto lambda = [&]() -> void
+        {
+            m_engine->update();
+            dataChanged(index(0),index(m_engine->itemsCount() - 1));
+            qDebug() << "UpdateData called.";
+        };
+    connect(m_frameClock.get(), SIGNAL(timeout()), this, SLOT(lambda));
+    m_frameClock->start(1000);
+}
+
+EntropyModel::~EntropyModel()
+{
+    m_frameClock->stop();
 }
 
 /*bool EntropyModel::canFetchMore(const QModelIndex &parent) const
@@ -34,6 +49,12 @@ int EntropyModel::rowCount(const QModelIndex &parent) const
     }
     return 0;
 }
+
+/*int EntropyModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED (parent);
+    return 1;
+}*/
 
 QVariant EntropyModel::data(const QModelIndex &index, int role) const
 {
@@ -77,5 +98,14 @@ float EntropyModel::windowHeight() const
 {
     return m_windowHeight;
 }
+
+void EntropyModel::updateData()
+{
+    m_engine->update();
+    dataChanged(index(0),index(m_engine->itemsCount() - 1));
+    qDebug() << "UpdateData called.";
+}
+
+
 
 

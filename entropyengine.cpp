@@ -3,9 +3,13 @@
 EntropyEngine::EntropyEngine()
 {
     srand(time(0));
-    Item* temp = new Item(50,50,(rand() % 0x1000000));
+    Item* temp = new Item(200, 100, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
     m_itemList.push_back(*temp);
-    temp = new Item(100,100,(rand() % 0x1000000));
+    temp = new Item(200, 200, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
+    m_itemList.push_back(*temp);
+    temp = new Item(100, 200, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
+    m_itemList.push_back(*temp);
+    temp = new Item(100, 100, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
     m_itemList.push_back(*temp);
 }
 
@@ -42,6 +46,17 @@ Item& EntropyEngine::getItem(const int& _index)
 int EntropyEngine::itemsCount() const
 {
     return m_itemList.size();
+}
+
+float EntropyEngine::getRandomColor()
+{
+
+    return (((rand() % 0x100) + ((rand() % 0x100) * 256) + ((rand() % 0x100) * 256 * 256)));
+}
+
+int EntropyEngine::getRandomDirection()
+{
+    return rand() % 360;
 }
 
 void EntropyEngine::moveItems()

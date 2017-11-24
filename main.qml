@@ -1,16 +1,22 @@
 import QtQuick 2.7
 import QtQuick.Window 2.2
 
-Window {
+Window
+{
     visible: true
-    width: 500
-    height: 500
+    width: 1024
+    height: 800
     title: qsTr("Entropy")
 
-    MouseArea {
+    MouseArea
+    {
         anchors.fill: parent
+        onClicked:
+        {
+            entropyModel.canFetchMore();
+        }
     }
-    ListView
+    Repeater
     {
         id: gridView
         model: entropyModel

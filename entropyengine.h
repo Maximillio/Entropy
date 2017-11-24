@@ -6,6 +6,7 @@
 #include <random>
 #include <chrono>
 
+
 const float WINDOW_WIDTH  = 1024;
 const float WINDOW_HEIGHT = 800;
 
@@ -21,6 +22,8 @@ public:
     void createItem(float _x, float _y);
     Item& getItem(const int& _index);
     int itemsCount() const;
+    static float getRandomColor();
+    static int getRandomDirection();
 private:
     void moveItems();
     void checkCollisions();

@@ -1,8 +1,8 @@
 #include "item.h"
 
-Item::Item(float _x, float _y, float _color) : m_x(_x), m_y(_y), m_color(_color)
+Item::Item(float _x, float _y, float _color, int _direction) : m_x(_x), m_y(_y), m_color(_color)
 {
-
+   setDirection(_direction);
 }
 
 float Item::x() const
@@ -25,10 +25,10 @@ void Item::setY(float _y)
     m_y = _y;
 }
 
-void Item::setDirection(float _direction)
+void Item::setDirection(int _direction)
 {
-    m_directionX = cos(_direction * pi);
-    m_directionY = sin(_direction * pi);
+    m_directionX = cos((_direction/180.0) * pi);
+    m_directionY = sin((_direction/180.0) * pi);
 }
 
 void Item::move()

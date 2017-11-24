@@ -2,6 +2,8 @@
 #define ITEM_H
 
 #include <math.h>
+#include <random>
+
 const double pi = acos(-1);
 
 const float SPEED = 10;
@@ -10,7 +12,7 @@ const float SIZE  = 30;
 class Item
 {
 public:
-    Item(float _x,float _y, float _color);
+    Item(float _x, float _y, float _color, int _direction);
     float x() const;
     void setX(float _x);
 
@@ -19,7 +21,7 @@ public:
 
     float directionX() const;
     float directionY() const;
-    void setDirection(float _direction);
+    void setDirection(int _direction);
 
     void move();
     void bounceVerticaly();
