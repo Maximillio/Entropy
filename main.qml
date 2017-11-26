@@ -7,19 +7,25 @@ Window
     width: 1024
     height: 800
     title: qsTr("Entropy")
-
-    MouseArea
+    Rectangle
     {
-        anchors.fill: parent
-        onClicked:
+        width: 1024
+        height: 800
+        border.width: 3
+        border.color: "#000000"
+        MouseArea
         {
-            entropyModel.canFetchMore();
+            anchors.fill: parent
+            onClicked:
+            {
+                entropyModel.canFetchMore();
+            }
         }
-    }
-    Repeater
-    {
-        id: gridView
-        model: entropyModel
-        delegate: Delegate {x: xValue; y: yValue; color: colorValue; }
+        Repeater
+        {
+            id: gridView
+            model: entropyModel
+            delegate: Delegate {x: xValue; y: yValue; color: colorValue; }
+        }
     }
 }

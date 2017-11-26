@@ -6,6 +6,7 @@
 #include <random>
 #include <chrono>
 
+using namespace std::chrono;
 
 const float WINDOW_WIDTH  = 1024;
 const float WINDOW_HEIGHT = 800;
@@ -16,7 +17,7 @@ class EntropyEngine
 {
 public:
     EntropyEngine();
-    void update();
+    void update(double _secondsElapsed);
     void changeItemColor(float _x, float _y);
     void destroyItem(float _x, float _y);
     void createItem(float _x, float _y);
@@ -25,7 +26,7 @@ public:
     static float getRandomColor();
     static int getRandomDirection();
 private:
-    void moveItems();
+    void moveItems(double _secondsElapsed);
     void checkCollisions();
     CollisionType checkCollision(Item& _target);
     bool checkIfCoorinatesMatchItem(float _x, float _y, Item &_target);

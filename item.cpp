@@ -3,6 +3,7 @@
 Item::Item(float _x, float _y, float _color, int _direction) : m_x(_x), m_y(_y), m_color(_color)
 {
    setDirection(_direction);
+   m_bounced = false;
 }
 
 float Item::x() const
@@ -31,10 +32,10 @@ void Item::setDirection(int _direction)
     m_directionY = sin((_direction/180.0) * pi);
 }
 
-void Item::move()
+void Item::move(double _secondsElapsed)
 {
-    m_x += m_directionX * SPEED;
-    m_y += m_directionY * SPEED;
+    m_x += m_directionX * SPEED * _secondsElapsed;
+    m_y += m_directionY * SPEED * _secondsElapsed;
 }
 
 void Item::bounceVerticaly()
@@ -65,6 +66,16 @@ int Item::color() const
 void Item::setColor(int color)
 {
     m_color = color;
+}
+
+bool Item::bounced() const
+{
+    return m_bounced;
+}
+
+void Item::setBounced(bool bounced)
+{
+    m_bounced = bounced;
 }
 
 float Item::directionX() const

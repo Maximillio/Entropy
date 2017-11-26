@@ -13,9 +13,9 @@ EntropyEngine::EntropyEngine()
     m_itemList.push_back(*temp);
 }
 
-void EntropyEngine::update()
+void EntropyEngine::update(double _secondsElapsed)
 {
-    moveItems();
+    moveItems(_secondsElapsed);
     checkCollisions();
 }
 
@@ -59,11 +59,11 @@ int EntropyEngine::getRandomDirection()
     return rand() % 360;
 }
 
-void EntropyEngine::moveItems()
+void EntropyEngine::moveItems(double _secondsElapsed)
 {
     for (unsigned i = 0; i < m_itemList.size(); ++i)
     {
-        m_itemList[i].move();
+        m_itemList[i].move(_secondsElapsed);
     }
 }
 
@@ -88,23 +88,34 @@ void EntropyEngine::checkCollisions()
     }
 }
 
-CollisionType EntropyEngine::checkCollision(Item &_target)
+CollisionType EntropyEngine::checkCollision(Item& _target)
 {
-    if (_target.x() < 0)
+    if (!_target.bounced())
     {
-        return CollisionType::Vertical;
+        if (_target.x() <= 0)
+        {
+            _target.setBounced(true);
+            return CollisionType::Vertical;
+        }
+        if (_target.y() <= 0)
+        {
+            _target.setBounced(true);
+            return CollisionType::Horisontal;
+        }
+        if ((_target.x() + SIZE)  >= WINDOW_WIDTH)
+        {
+            _target.setBounced(true);
+            return CollisionType::Vertical;
+        }
+        if ((_target.y() + SIZE) >= WINDOW_HEIGHT)
+        {
+            _target.setBounced(true);
+            return CollisionType::Horisontal;
+        }
     }
-    if (_target.y() < 0)
+    else
     {
-        return CollisionType::Horisontal;
-    }
-    if ((_target.x() + SIZE)  > WINDOW_WIDTH)
-    {
-        return CollisionType::Vertical;
-    }
-    if ((_target.y() + SIZE) > WINDOW_HEIGHT)
-    {
-        return CollisionType::Horisontal;
+        _target.setBounced(false);
     }
     return CollisionType::None;
 }

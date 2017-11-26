@@ -3,11 +3,13 @@
 
 #include <math.h>
 #include <random>
+#include <chrono>
+
+using namespace std::chrono;
 
 const double pi = acos(-1);
-
-const float SPEED = 10;
-const float SIZE  = 30;
+const float  SPEED = 100; //Pixels per second
+const float  SIZE  = 50;
 
 class Item
 {
@@ -23,7 +25,7 @@ public:
     float directionY() const;
     void setDirection(int _direction);
 
-    void move();
+    void move(double _secondsElapsed);
     void bounceVerticaly();
     void bounceHorizontally();
 
@@ -33,12 +35,16 @@ public:
     int color() const;
     void setColor(int color);
 
+    bool bounced() const;
+    void setBounced(bool bounced);
+
 private:
     float       m_x;
     float       m_y;
     float       m_directionX;
     float       m_directionY;
     int         m_color;
+    bool        m_bounced;
 };
 
 #endif // ITEM_H
