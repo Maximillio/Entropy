@@ -16,7 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
     entropymodel.cpp \
     entropyengine.cpp \
-    item.cpp
+    item.cpp \
+    entropyengine.cpp \
+    entropymodel.cpp \
+    item.cpp \
+    main.cpp
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -32,8 +36,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     entropymodel.h \
     entropyengine.h \
+    item.h \
+    entropyengine.h \
+    entropymodel.h \
     item.h
 
 DISTFILES += \
     main.qml \
-    Delegate.qml
+    Delegate.qml \
+    ControlPanel.qml \
+    ControlPanelButton.qml \
+    Counter.qml \
+    Resources/Icon_Left.png \
+    Resources/Icon_Right.png
