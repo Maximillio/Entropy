@@ -12,7 +12,7 @@ const double pi = acos(-1);
 class Item
 {
 public:
-    Item(float _x, float _y, float _color, int _direction, int _speed, int _size);
+    Item(float _x, float _y, float _color, int _direction, int _size);
     float x() const;
     void setX(float _x);
 
@@ -23,7 +23,7 @@ public:
     float directionY() const;
     void setDirection(int _direction);
 
-    void move(double _secondsElapsed);
+    void move(double _secondsElapsed, int _speed);
     void bounceVerticaly();
     void bounceHorizontally();
 
@@ -46,7 +46,6 @@ private:
     float       m_directionY;
     int         m_color;
     bool        m_bounced;
-    int         m_speed;
     int         m_size;
 };
 

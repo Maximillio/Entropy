@@ -29,7 +29,14 @@ Rectangle
                 }
             }
         }
-        Counter {counterValue: circlesSpeed}
+        Counter
+        {
+            counterValue: circlesSpeed
+            onCounterValueChanged:
+            {
+                circlesSpeed = counterValue;
+            }
+        }
         ControlPanelButton
         {
             text: "Kill on click"

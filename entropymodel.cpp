@@ -2,15 +2,16 @@
 
 EntropyModel::EntropyModel()
 {
-    m_windowHeight = WINDOW_HEIGHT;
-    m_windowWidth  = WINDOW_WIDTH;
-    m_frameDelay   = 15;
-    m_itemSpeed    = 100;
+    m_windowHeight = 800;
+    m_windowWidth  = 1024;
+    m_frameDelay   = 15;   
     m_itemSize     = 50;
     m_isRunning    = false;
-    m_engine       = std::unique_ptr<EntropyEngine>(new EntropyEngine());
+    m_itemSpeed    = 100;
+    m_engine       = std::unique_ptr<EntropyEngine>(new EntropyEngine(m_windowHeight, m_windowWidth, m_itemSpeed));
     m_frameClock   = std::unique_ptr<QTimer>(new QTimer(this));
     connect(m_frameClock.get(), SIGNAL(timeout()), this, SLOT(updateData()));
+    connect(this, SIGNAL(m_itemSpeedChanged(int)), &(*m_engine), SLOT(onSpeedChanged(int)));
     m_timeBefore   = high_resolution_clock::now();
     m_timeAfter    = high_resolution_clock::now();
     setIsRunning(true);
@@ -76,7 +77,7 @@ void EntropyModel::updateData()
 {
     m_timeBefore = high_resolution_clock::now();
     m_timeElapsed = duration_cast<duration<double>>(m_timeBefore - m_timeAfter);
-    qDebug() << m_timeElapsed.count();
+    //qDebug() << m_timeElapsed.count();
     m_engine->update(m_timeElapsed.count());
     dataChanged(index(0),index(m_engine->itemsCount() - 1));
     m_timeAfter = high_resolution_clock::now();
@@ -119,7 +120,13 @@ int EntropyModel::itemCount() const
 
 void EntropyModel::createItem(int _x, int _y)
 {
-    m_engine->createItem(_x, _y, m_itemSpeed, m_itemSize);
+    qDebug() << "Created Item";
+    beginInsertRows(QModelIndex(),0,0);
+    this->insertRow(0);
+    m_engine->createItem(_x, _y, m_itemSize);
+    endInsertRows();
+    emit itemCountChanged(itemCount());
+    qDebug() << m_engine->itemsCount();
 }
 
 void EntropyModel::destroyItem(int _x, int _y)

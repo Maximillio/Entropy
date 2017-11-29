@@ -1,6 +1,7 @@
 #include "item.h"
 
-Item::Item(float _x, float _y, float _color, int _direction, int _speed, int _size) : m_x(_x), m_y(_y), m_color(_color), m_speed(_speed), m_size(_size)
+Item::Item(float _x, float _y, float _color, int _direction, int _size)
+    : m_x(_x), m_y(_y), m_color(_color), m_size(_size)
 {
    setDirection(_direction);
    m_bounced = false;
@@ -32,10 +33,24 @@ void Item::setDirection(int _direction)
     m_directionY = sin((_direction/180.0) * pi);
 }
 
-void Item::move(double _secondsElapsed)
+void Item::move(double _secondsElapsed, int _speed)
 {
-    m_x += m_directionX * m_speed * _secondsElapsed;
-    m_y += m_directionY * m_speed * _secondsElapsed;
+    if (m_directionX < 0)
+    {
+        m_x += -(m_directionX * m_directionX) * _speed * _secondsElapsed;
+    }
+    else
+    {
+        m_x += (m_directionX * m_directionX) * _speed * _secondsElapsed;
+    }
+    if (m_directionY < 0)
+    {
+        m_y += -(m_directionY * m_directionY) * _speed * _secondsElapsed;
+    }
+    else
+    {
+        m_y += (m_directionY * m_directionY) * _speed * _secondsElapsed;
+    }
 }
 
 void Item::bounceVerticaly()
@@ -51,11 +66,6 @@ void Item::bounceHorizontally()
 float Item::size() const
 {
     return m_size;
-}
-
-float Item::speed() const
-{
-    return m_speed;
 }
 
 int Item::color() const
@@ -81,11 +91,6 @@ void Item::setBounced(bool bounced)
 void Item::setSize(int size)
 {
     m_size = size;
-}
-
-void Item::setSpeed(int _speed)
-{
-    m_speed = _speed;
 }
 
 float Item::directionX() const

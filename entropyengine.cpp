@@ -1,6 +1,7 @@
 #include "entropyengine.h"
 
-EntropyEngine::EntropyEngine()
+EntropyEngine::EntropyEngine(int _windowHeight, int _windowWidth, int _itemSpeed)
+    : m_windowHeight(_windowHeight), m_windowWidth(_windowWidth), m_itemSpeed(_itemSpeed)
 {
     srand(time(0));
 }
@@ -22,9 +23,9 @@ void EntropyEngine::changeItemColor(float _x, float _y)
     }
 }
 
-void EntropyEngine::createItem(int _x, int _y, int _speed, int _size)
+void EntropyEngine::createItem(int _x, int _y, int _size)
 {
-    auto temp = new Item(_x, _y, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection(), _speed, _size);
+    auto temp = new Item(_x, _y, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection(), _size);
     m_itemList.push_back(*temp);
 }
 
@@ -69,11 +70,16 @@ int EntropyEngine::getRandomDirection()
     return rand() % 360;
 }
 
+void EntropyEngine::onSpeedChanged(const int &_speed)
+{
+    m_itemSpeed = _speed;
+}
+
 void EntropyEngine::moveItems(double _secondsElapsed)
 {
     for (unsigned i = 0; i < m_itemList.size(); ++i)
     {
-        m_itemList[i].move(_secondsElapsed);
+        m_itemList[i].move(_secondsElapsed, m_itemSpeed);
     }
 }
 
@@ -112,12 +118,12 @@ CollisionType EntropyEngine::checkCollision(Item& _target)
             _target.setBounced(true);
             return CollisionType::Horisontal;
         }
-        if ((_target.x() + _target.size())  >= WINDOW_WIDTH)
+        if ((_target.x() + _target.size())  >= m_windowWidth)
         {
             _target.setBounced(true);
             return CollisionType::Vertical;
         }
-        if ((_target.y() + _target.size()) >= WINDOW_HEIGHT)
+        if ((_target.y() + _target.size()) >= m_windowHeight)
         {
             _target.setBounced(true);
             return CollisionType::Horisontal;

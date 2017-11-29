@@ -4,43 +4,45 @@ import QtQuick.Window 2.2
 Window
 {
     visible: true
-    width: 1024
-    height: 900
+    width: entropyModel.windowWidth
+    height: entropyModel.windowHeight + 100
     minimumHeight: 900
     maximumHeight: 900
-    minimumWidth: 1024
-    maximumWidth:  1024
+    minimumWidth: width
+    maximumWidth:  width
 
     title: qsTr("Entropy")
     Rectangle
     {
         width: entropyModel.windowWidth
         height: entropyModel.windowHeight
-        border.width: 3
+        border.width: 2
         border.color: "#000000"
         MouseArea
         {
             anchors.fill: parent
             onClicked:
             {
-                entropyModel.canFetchMore();
+                entropyModel.createItem(mouse.x, mouse.y);
             }
         }
         Repeater
         {
-            id: gridView
+            id: view
             model: entropyModel
-            delegate: Delegate {x: entropyModel.itemSize; y: entropyModel.itemSize; color: colorValue; }
+            delegate: Delegate {x: xValue; y: yValue; color: colorValue; }
         }
     }
     ControlPanel
     {
+        id: controlPanel
         circlesSpeed: entropyModel.itemSpeed
-        PropertyChanges {
-            target: circlesSpeed
-            entropyModel.itemSpeed: circlesSpeed
-        }
         circlesCount: entropyModel.itemCount
+        onCirclesSpeedChanged:
+        {
+            entropyModel.itemSpeed = controlPanel.circlesSpeed;
+            console.log("Changed " + entropyModel.itemSpeed);
+        }
         y: 800
     }
 }
