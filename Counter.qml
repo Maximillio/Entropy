@@ -15,7 +15,11 @@ Rectangle
             id: arrowLeft
             width: 100
             height: 100
-            iconSource: "file:Resources/Icon_Left.png"
+            iconSource: "Resources/Icon_Left.png"
+            onClicked:
+            {
+                --counterValue;
+            }
         }
         Label
         {
@@ -23,7 +27,7 @@ Rectangle
             width: 100
             height: 100
             text: counterValue
-            font.pointSize: 20
+            font.pointSize: 30
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
         }
@@ -32,7 +36,11 @@ Rectangle
             id: arrowRight
             width: 100
             height: 100
-            iconSource: "file:Resources/Icon_Right.png"
+            iconSource: "Resources/Icon_Right.png"
+            onClicked:
+            {
+                ++counterValue;
+            }
         }
     }
 }

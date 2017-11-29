@@ -1,6 +1,6 @@
 #include "item.h"
 
-Item::Item(float _x, float _y, float _color, int _direction) : m_x(_x), m_y(_y), m_color(_color)
+Item::Item(float _x, float _y, float _color, int _direction, int _speed, int _size) : m_x(_x), m_y(_y), m_color(_color), m_speed(_speed), m_size(_size)
 {
    setDirection(_direction);
    m_bounced = false;
@@ -34,8 +34,8 @@ void Item::setDirection(int _direction)
 
 void Item::move(double _secondsElapsed)
 {
-    m_x += m_directionX * SPEED * _secondsElapsed;
-    m_y += m_directionY * SPEED * _secondsElapsed;
+    m_x += m_directionX * m_speed * _secondsElapsed;
+    m_y += m_directionY * m_speed * _secondsElapsed;
 }
 
 void Item::bounceVerticaly()
@@ -50,12 +50,12 @@ void Item::bounceHorizontally()
 
 float Item::size() const
 {
-    return SIZE;
+    return m_size;
 }
 
 float Item::speed() const
 {
-    return SPEED;
+    return m_speed;
 }
 
 int Item::color() const
@@ -76,6 +76,16 @@ bool Item::bounced() const
 void Item::setBounced(bool bounced)
 {
     m_bounced = bounced;
+}
+
+void Item::setSize(int size)
+{
+    m_size = size;
+}
+
+void Item::setSpeed(int _speed)
+{
+    m_speed = _speed;
 }
 
 float Item::directionX() const

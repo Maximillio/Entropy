@@ -3,14 +3,6 @@
 EntropyEngine::EntropyEngine()
 {
     srand(time(0));
-    Item* temp = new Item(200, 100, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
-    m_itemList.push_back(*temp);
-    temp = new Item(200, 200, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
-    m_itemList.push_back(*temp);
-    temp = new Item(100, 200, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
-    m_itemList.push_back(*temp);
-    temp = new Item(100, 100, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection());
-    m_itemList.push_back(*temp);
 }
 
 void EntropyEngine::update(double _secondsElapsed)
@@ -26,6 +18,24 @@ void EntropyEngine::changeItemColor(float _x, float _y)
         if (checkIfCoorinatesMatchItem(_x, _y, m_itemList[i]))
         {
             m_itemList[i].setColor(rand() % 0x1000000);
+        }
+    }
+}
+
+void EntropyEngine::createItem(int _x, int _y, int _speed, int _size)
+{
+    auto temp = new Item(_x, _y, EntropyEngine::getRandomColor(), EntropyEngine::getRandomDirection(), _speed, _size);
+    m_itemList.push_back(*temp);
+}
+
+void EntropyEngine::destroyItem(int _x, int _y)
+{
+    for(auto i = m_itemList.begin(); i != m_itemList.end(); ++i)
+    {
+        if ((i->x() == _x) && (i->y() == _y))
+        {
+            m_itemList.erase(i);
+            break;
         }
     }
 }
@@ -102,12 +112,12 @@ CollisionType EntropyEngine::checkCollision(Item& _target)
             _target.setBounced(true);
             return CollisionType::Horisontal;
         }
-        if ((_target.x() + SIZE)  >= WINDOW_WIDTH)
+        if ((_target.x() + _target.size())  >= WINDOW_WIDTH)
         {
             _target.setBounced(true);
             return CollisionType::Vertical;
         }
-        if ((_target.y() + SIZE) >= WINDOW_HEIGHT)
+        if ((_target.y() + _target.size()) >= WINDOW_HEIGHT)
         {
             _target.setBounced(true);
             return CollisionType::Horisontal;
@@ -123,14 +133,12 @@ CollisionType EntropyEngine::checkCollision(Item& _target)
 bool EntropyEngine::checkIfCoorinatesMatchItem(float _x, float _y, Item& _target)
 {
     if ((_x >=_target.x())
-        && (_x <= (_target.x() + SIZE))
+        && (_x <= (_target.x() + _target.size()))
         && (_y >= _target.y())
-        && (_y <= (_target.y() + SIZE)))
+        && (_y <= (_target.y() + _target.size())))
     {
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }

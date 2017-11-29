@@ -24,30 +24,64 @@ class EntropyModel : public QAbstractListModel
                MEMBER m_windowWidth
                READ windowWidth
                NOTIFY m_windowWidthChanged)
+    Q_PROPERTY(int itemSpeed
+               MEMBER m_itemSpeed
+               READ itemSpeed
+               WRITE setItemSpeed
+               NOTIFY m_itemSpeedChanged)
+    Q_PROPERTY(int itemSize
+               MEMBER m_itemSize
+               READ itemSize)
+    Q_PROPERTY(bool isRunning
+               MEMBER m_isRunning
+               READ isRunning
+               WRITE setIsRunning
+               NOTIFY m_isRunningChanged)
+    Q_PROPERTY(int itemCount
+               READ itemCount
+               NOTIFY itemCountChanged)
 public:
     EntropyModel();
     ~EntropyModel();
-    //bool canFetchMore(const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    //int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
+    //Getters
     float windowWidth() const;
     float windowHeight() const;
+    int itemSpeed() const;
+    bool isRunning() const;
+    int itemCount() const;
+    int itemSize() const;
+    //Setters
+    void setItemSpeed(int itemSpeed);
+    void setIsRunning(bool isRunning);
+
+
+
 signals:
    void m_windowHeightChanged(const float& _windowHeight);
    void m_windowWidthChanged(const float& _windowWight);
+   void m_itemSpeedChanged(const int& _itemSpeed);
+   void m_isRunningChanged(const bool& _isRunning);
+   void itemCountChanged(const int& _itemCount);
 public slots:
+   void createItem(int _x, int _y);
+   void destroyItem(int _x, int _y);
+private slots:
    void updateData();
 private:
+    int                               m_frameDelay;
     std::unique_ptr<EntropyEngine>    m_engine;
     std::unique_ptr<QTimer>           m_frameClock;
     duration<double>                  m_timeElapsed;
-//    time_t                            m_timer;
     high_resolution_clock::time_point m_timeBefore;
     high_resolution_clock::time_point m_timeAfter;
-    float m_windowHeight = WINDOW_HEIGHT;
-    float m_windowWidth  = WINDOW_WIDTH;
+    float m_windowHeight;
+    float m_windowWidth;
+    int   m_itemSpeed;
+    int   m_itemSize;
+    bool  m_isRunning;
 };
 
 #endif // ENTROPYMODEL_H

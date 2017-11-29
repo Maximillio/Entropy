@@ -8,13 +8,11 @@
 using namespace std::chrono;
 
 const double pi = acos(-1);
-const float  SPEED = 100; //Pixels per second
-const float  SIZE  = 50;
 
 class Item
 {
 public:
-    Item(float _x, float _y, float _color, int _direction);
+    Item(float _x, float _y, float _color, int _direction, int _speed, int _size);
     float x() const;
     void setX(float _x);
 
@@ -30,7 +28,10 @@ public:
     void bounceHorizontally();
 
     float size() const;
+    void setSize(int size);
+
     float speed() const;
+    void setSpeed(int _speed);
 
     int color() const;
     void setColor(int color);
@@ -45,6 +46,8 @@ private:
     float       m_directionY;
     int         m_color;
     bool        m_bounced;
+    int         m_speed;
+    int         m_size;
 };
 
 #endif // ITEM_H

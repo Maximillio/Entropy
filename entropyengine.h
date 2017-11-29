@@ -19,8 +19,8 @@ public:
     EntropyEngine();
     void update(double _secondsElapsed);
     void changeItemColor(float _x, float _y);
-    void destroyItem(float _x, float _y);
-    void createItem(float _x, float _y);
+    void createItem(int _x, int _y, int _speed, int _size);
+    void destroyItem(int _x, int _y);
     Item& getItem(const int& _index);
     int itemsCount() const;
     static float getRandomColor();

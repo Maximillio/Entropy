@@ -30,11 +30,17 @@ Window
         {
             id: gridView
             model: entropyModel
-            delegate: Delegate {x: xValue; y: yValue; color: colorValue; }
+            delegate: Delegate {x: entropyModel.itemSize; y: entropyModel.itemSize; color: colorValue; }
         }
     }
     ControlPanel
     {
+        circlesSpeed: entropyModel.itemSpeed
+        PropertyChanges {
+            target: circlesSpeed
+            entropyModel.itemSpeed: circlesSpeed
+        }
+        circlesCount: entropyModel.itemCount
         y: 800
     }
 }

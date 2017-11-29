@@ -2,38 +2,25 @@
 
 EntropyModel::EntropyModel()
 {
-    m_engine = std::unique_ptr<EntropyEngine>(new EntropyEngine());
-    m_frameClock = std::unique_ptr<QTimer>(new QTimer(this));
+    m_windowHeight = WINDOW_HEIGHT;
+    m_windowWidth  = WINDOW_WIDTH;
+    m_frameDelay   = 15;
+    m_itemSpeed    = 100;
+    m_itemSize     = 50;
+    m_isRunning    = false;
+    m_engine       = std::unique_ptr<EntropyEngine>(new EntropyEngine());
+    m_frameClock   = std::unique_ptr<QTimer>(new QTimer(this));
     connect(m_frameClock.get(), SIGNAL(timeout()), this, SLOT(updateData()));
-    m_timeBefore = high_resolution_clock::now();
-    m_timeAfter  = high_resolution_clock::now();
-    m_frameClock->start(15);
+    m_timeBefore   = high_resolution_clock::now();
+    m_timeAfter    = high_resolution_clock::now();
+    setIsRunning(true);
+    m_frameClock->start(m_frameDelay);
 }
 
 EntropyModel::~EntropyModel()
 {
     m_frameClock->stop();
 }
-
-/*bool EntropyModel::canFetchMore(const QModelIndex &parent) const
-{
-    Q_UNUSED (parent);
-    static int currentFetchItem = 0;
-    if (m_engine)
-    {
-        if (currentFetchItem < m_engine->itemsCount())
-        {
-            ++currentFetchItem;
-            return true;
-        }
-        else
-        {
-            currentFetchItem = 0;
-            return false;
-        }
-    }
-    return false;
-}*/
 
 int EntropyModel::rowCount(const QModelIndex &parent) const
 {
@@ -45,29 +32,20 @@ int EntropyModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-/*int EntropyModel::columnCount(const QModelIndex &parent) const
-{
-    Q_UNUSED (parent);
-    return 1;
-}*/
-
 QVariant EntropyModel::data(const QModelIndex &index, int role) const
 {
     if (m_engine)
     {
         if (role == (Qt::UserRole + 1))
         {
-            //qDebug() << m_engine->getItem(index.row()).x();
             return m_engine->getItem(index.row()).x();
         }
         if (role == (Qt::UserRole + 2))
         {
-            //qDebug() << m_engine->getItem(index.row()).y();
             return m_engine->getItem(index.row()).y();
         }
         if (role == (Qt::UserRole + 3))
         {
-            //qDebug() << m_engine->getItem(index.row()).color();
             return QColor(m_engine->getItem(index.row()).color());
         }
     }
@@ -102,6 +80,62 @@ void EntropyModel::updateData()
     m_engine->update(m_timeElapsed.count());
     dataChanged(index(0),index(m_engine->itemsCount() - 1));
     m_timeAfter = high_resolution_clock::now();
+}
+
+int EntropyModel::itemSize() const
+{
+    return m_itemSize;
+}
+
+bool EntropyModel::isRunning() const
+{
+    return m_isRunning;
+}
+
+void EntropyModel::setIsRunning(bool isRunning)
+{
+    m_isRunning = isRunning;
+    if (m_isRunning)
+    {
+        if (m_frameClock->isActive())
+        {
+            m_frameClock->stop();
+        }
+    }
+    else
+    {
+        if (!m_frameClock->isActive())
+        {
+            m_frameClock->start();
+        }
+    }
+    emit m_isRunningChanged(m_isRunning);
+}
+
+int EntropyModel::itemCount() const
+{
+    return m_engine->itemsCount();
+}
+
+void EntropyModel::createItem(int _x, int _y)
+{
+    m_engine->createItem(_x, _y, m_itemSpeed, m_itemSize);
+}
+
+void EntropyModel::destroyItem(int _x, int _y)
+{
+    m_engine->destroyItem(_x, _y);
+}
+
+int EntropyModel::itemSpeed() const
+{
+    return m_itemSpeed;
+}
+
+void EntropyModel::setItemSpeed(int itemSpeed)
+{
+    m_itemSpeed = itemSpeed;
+    emit m_itemSpeedChanged(m_itemSpeed);
 }
 
 

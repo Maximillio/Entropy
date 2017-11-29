@@ -2,16 +2,20 @@ import QtQuick 2.0
 
 Rectangle
 {
+    property int circlesSpeed: 0
+    property int circlesCount: 0
     width: 1024
     height: 100
     Row
     {
         ControlPanelButton
         {
+            width: 174
             text: "Start over"
         }
         ControlPanelButton
         {
+            width: 150
             text: "Play"
             onClicked:
             {
@@ -25,8 +29,7 @@ Rectangle
                 }
             }
         }
-        Counter
-        {}
+        Counter {counterValue: circlesSpeed}
         ControlPanelButton
         {
             text: "Kill on click"
@@ -42,5 +45,6 @@ Rectangle
                 }
             }
         }
+        ItemCountDisplay {circlesCount: circlesCount}
     }
 }
