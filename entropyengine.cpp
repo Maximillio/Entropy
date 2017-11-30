@@ -14,12 +14,11 @@ void EntropyEngine::update(double _secondsElapsed)
 
 void EntropyEngine::changeItemColor(float _x, float _y)
 {
-    for (unsigned i = 0; i < m_itemList.size(); ++i)
+    Item* itemToChange = nullptr;
+    itemToChange = getItemByCoordinates(_x, _y);
+    if (itemToChange)
     {
-        if (checkIfCoorinatesMatchItem(_x, _y, m_itemList[i]))
-        {
-            m_itemList[i].setColor(rand() % 0x1000000);
-        }
+        itemToChange->setColor(EntropyEngine::getRandomColor());
     }
 }
 
@@ -29,16 +28,26 @@ void EntropyEngine::createItem(int _x, int _y, int _size)
     m_itemList.push_back(*temp);
 }
 
-void EntropyEngine::destroyItem(int _x, int _y)
+int EntropyEngine::destroyItem(int _x, int _y)
 {
-    for(auto i = m_itemList.begin(); i != m_itemList.end(); ++i)
+    int index = 0;
+    for (auto i = m_itemList.begin(); i != m_itemList.end(); ++i, ++index)
     {
-        if ((i->x() == _x) && (i->y() == _y))
+        if ((_x >=i->x())
+            && (_x <= (i->x() + i->size()))
+            && (_y >= i->y())
+            && (_y <= (i->y() + i->size())))
         {
             m_itemList.erase(i);
-            break;
+            return index;
         }
     }
+    return -1;
+}
+
+void EntropyEngine::destroyAll()
+{
+    m_itemList.erase(m_itemList.begin(), m_itemList.end());
 }
 
 Item& EntropyEngine::getItem(const int& _index)
@@ -136,15 +145,32 @@ CollisionType EntropyEngine::checkCollision(Item& _target)
     return CollisionType::None;
 }
 
-bool EntropyEngine::checkIfCoorinatesMatchItem(float _x, float _y, Item& _target)
+bool EntropyEngine::checkIfCoorinatesMatchItem(int _x, int _y)
 {
-    if ((_x >=_target.x())
-        && (_x <= (_target.x() + _target.size()))
-        && (_y >= _target.y())
-        && (_y <= (_target.y() + _target.size())))
+    for (Item i : m_itemList)
     {
-        return true;
+        if ((_x >=i.x())
+            && (_x <= (i.x() + i.size()))
+            && (_y >= i.y())
+            && (_y <= (i.y() + i.size())))
+        {
+            return true;
+        }
     }
-
     return false;
+}
+
+Item* EntropyEngine::getItemByCoordinates(int _x, int _y)
+{
+    for (unsigned i = 0; i < m_itemList.size(); ++i)
+    {
+        if ((_x >=m_itemList[i].x())
+            && (_x <= (m_itemList[i].x() + m_itemList[i].size()))
+            && (_y >= m_itemList[i].y())
+            && (_y <= (m_itemList[i].y() + m_itemList[i].size())))
+        {
+            return &m_itemList[i];
+        }
+    }
+    return nullptr;
 }

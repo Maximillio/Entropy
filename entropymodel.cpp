@@ -77,8 +77,10 @@ void EntropyModel::updateData()
 {
     m_timeBefore = high_resolution_clock::now();
     m_timeElapsed = duration_cast<duration<double>>(m_timeBefore - m_timeAfter);
-    //qDebug() << m_timeElapsed.count();
-    m_engine->update(m_timeElapsed.count());
+    if (m_isRunning)
+    {
+        m_engine->update(m_timeElapsed.count());
+    }
     dataChanged(index(0),index(m_engine->itemsCount() - 1));
     m_timeAfter = high_resolution_clock::now();
 }
@@ -96,20 +98,6 @@ bool EntropyModel::isRunning() const
 void EntropyModel::setIsRunning(bool isRunning)
 {
     m_isRunning = isRunning;
-    if (m_isRunning)
-    {
-        if (m_frameClock->isActive())
-        {
-            m_frameClock->stop();
-        }
-    }
-    else
-    {
-        if (!m_frameClock->isActive())
-        {
-            m_frameClock->start();
-        }
-    }
     emit m_isRunningChanged(m_isRunning);
 }
 
@@ -120,18 +108,49 @@ int EntropyModel::itemCount() const
 
 void EntropyModel::createItem(int _x, int _y)
 {
-    qDebug() << "Created Item";
-    beginInsertRows(QModelIndex(),0,0);
-    this->insertRow(0);
-    m_engine->createItem(_x, _y, m_itemSize);
-    endInsertRows();
-    emit itemCountChanged(itemCount());
-    qDebug() << m_engine->itemsCount();
+    if (((_x - m_itemSize/2) > 0)
+        && ((_x + m_itemSize/2) < m_windowWidth)
+        && ((_y - m_itemSize/2) > 0)
+        && ((_y + m_itemSize/2) < m_windowHeight))
+    {
+        beginInsertRows(QModelIndex(),0,0);
+        this->insertRow(0);
+        m_engine->createItem(_x - m_itemSize/2, _y - m_itemSize/2, m_itemSize);
+        endInsertRows();
+        emit itemCountChanged(itemCount());
+    }
 }
 
 void EntropyModel::destroyItem(int _x, int _y)
 {
-    m_engine->destroyItem(_x, _y);
+
+    int index = m_engine->destroyItem(_x, _y);
+    if (index >= 0)
+    {
+        beginRemoveRows(QModelIndex(), index, index);
+        removeRow(index);
+        endRemoveRows();
+    }
+    emit itemCountChanged(itemCount());
+}
+
+bool EntropyModel::isItem(int _x, int _y)
+{
+    return m_engine->checkIfCoorinatesMatchItem(_x, _y);
+}
+
+void EntropyModel::changeItemColor(int _x, int _y)
+{
+    m_engine->changeItemColor(_x, _y);
+}
+
+void EntropyModel::clearAll()
+{
+    beginRemoveRows(QModelIndex(), 0, itemCount() - 1);
+    removeRows(0, itemCount() - 1);
+    endRemoveRows();
+    m_engine->destroyAll();
+    emit itemCountChanged(itemCount());
 }
 
 int EntropyModel::itemSpeed() const

@@ -1,13 +1,18 @@
 import QtQuick 2.7
 import QtQuick.Window 2.2
 
+
+
 Window
 {
+    property int actionOnItemClick: 0
+
+    id: mainWindow
     visible: true
     width: entropyModel.windowWidth
     height: entropyModel.windowHeight + 100
-    minimumHeight: 900
-    maximumHeight: 900
+    minimumHeight: entropyModel.windowHeight + 100
+    maximumHeight: entropyModel.windowHeight + 100
     minimumWidth: width
     maximumWidth:  width
 
@@ -23,7 +28,27 @@ Window
             anchors.fill: parent
             onClicked:
             {
-                entropyModel.createItem(mouse.x, mouse.y);
+                if (entropyModel.isItem(mouse.x, mouse.y))
+                {
+                    switch (actionOnItemClick)
+                    {
+                        case 0:
+                        {
+                            entropyModel.destroyItem(mouse.x, mouse.y);
+                            break;
+                        }
+                        case 1:
+                        {
+                            entropyModel.changeItemColor(mouse.x, mouse.y);
+                            break;
+                        }
+                        default: break;
+                    }
+                }
+                else
+                {
+                    entropyModel.createItem(mouse.x, mouse.y);
+                }
             }
         }
         Repeater
@@ -38,10 +63,28 @@ Window
         id: controlPanel
         circlesSpeed: entropyModel.itemSpeed
         circlesCount: entropyModel.itemCount
-        onCirclesSpeedChanged:
+        Binding
         {
-            entropyModel.itemSpeed = controlPanel.circlesSpeed;
-            console.log("Changed " + entropyModel.itemSpeed);
+            target: entropyModel
+            property: "itemSpeed"
+            value: controlPanel.circlesSpeed
+        }
+        Binding
+        {
+            target: mainWindow
+            property: "actionOnItemClick"
+            value: controlPanel.actionOnItemClick
+        }
+        Binding
+        {
+            target: entropyModel
+            property: "isRunning"
+            value: controlPanel.isRunning
+        }
+        Connections
+        {
+            target: controlPanel
+            onClearAll: {entropyModel.clearAll();}
         }
         y: 800
     }

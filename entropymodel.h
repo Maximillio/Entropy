@@ -49,10 +49,10 @@ public:
     //Getters
     float windowWidth() const;
     float windowHeight() const;
-    int itemSpeed() const;
-    bool isRunning() const;
-    int itemCount() const;
-    int itemSize() const;
+    int   itemSpeed() const;
+    bool  isRunning() const;
+    int   itemCount() const;
+    int   itemSize() const;
     //Setters
     void setItemSpeed(int itemSpeed);
     void setIsRunning(bool isRunning);
@@ -66,8 +66,11 @@ signals:
    void m_isRunningChanged(const bool& _isRunning);
    void itemCountChanged(const int& _itemCount);
 public slots:
+   bool isItem(int _x, int _y);
    void createItem(int _x, int _y);
    void destroyItem(int _x, int _y);
+   void changeItemColor(int _x, int _y);
+   void clearAll();
 private slots:
    void updateData();
 private:

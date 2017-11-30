@@ -18,7 +18,10 @@ Rectangle
             iconSource: "Resources/Icon_Left.png"
             onClicked:
             {
-                --counterValue;
+                if (counterValue > -300)
+                {
+                    counterValue-=10;
+                }
             }
         }
         Label
@@ -39,7 +42,10 @@ Rectangle
             iconSource: "Resources/Icon_Right.png"
             onClicked:
             {
-                ++counterValue;
+                if (counterValue < 300)
+                {
+                    counterValue+=10;
+                }
             }
         }
     }

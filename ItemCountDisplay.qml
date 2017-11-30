@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Rectangle
 {
-    property int circlesCount: 0
+    property int count: 0
     width: 200
     height: 100
     Text
@@ -22,7 +22,7 @@ Rectangle
         font.pointSize: 20
         verticalAlignment: Text.AlignTop
         horizontalAlignment: Text.AlignHCenter
-        text: circlesCount
+        text: count
     }
 
 }

@@ -41,4 +41,5 @@ DISTFILES += \
     Counter.qml \
     Resources/Icon_Left.png \
     Resources/Icon_Right.png \
-    ItemCountDisplay.qml
+    ItemCountDisplay.qml \
+    Resources/Variables.js
