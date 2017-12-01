@@ -1,8 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Window 2.2
 
-
-
 Window
 {
     property int actionOnItemClick: 0
@@ -55,7 +53,7 @@ Window
         {
             id: view
             model: entropyModel
-            delegate: Delegate {x: xValue; y: yValue; color: colorValue; }
+            delegate: Delegate {x: xValue; y: yValue; colorOverlay: colorValue; }
         }
     }
     ControlPanel

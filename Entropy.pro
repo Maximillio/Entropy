@@ -42,4 +42,5 @@ DISTFILES += \
     Resources/Icon_Left.png \
     Resources/Icon_Right.png \
     ItemCountDisplay.qml \
-    Resources/Variables.js
+    Resources/Variables.js \
+    Resources/Bubble.png
